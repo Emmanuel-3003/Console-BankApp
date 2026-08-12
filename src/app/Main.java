@@ -16,14 +16,14 @@ public class Main {
 
         while(running){
             System.out.println("""
-                    1) Open Account
-                    2) Deposit
-                    3) Withdraw
-                    4) Transfer
-                    5) Account Statement
-                    6) List Account
-                    7) Search Accounts by Customer Name
-                    0) Exit
+                        1) Open Account
+                        2) Deposit
+                        3) Withdraw
+                        4) Transfer
+                        5) Account Statement
+                        6) List Account
+                        7) Search Accounts by Customer Name
+                        0) Exit
                     """);
             System.out.println("Please enter your choice: ");
             String choice = sc.nextLine().trim();
@@ -31,7 +31,7 @@ public class Main {
 
             switch (choice){
                 case "1" -> openAccount(sc, bankService);
-                case "2" -> deposit(sc);
+                case "2" -> deposit(sc, bankService);
                 case "3" -> withdraw(sc);
                 case "4" -> transfer(sc);
                 case "5" -> statement(sc);
@@ -54,14 +54,25 @@ public class Main {
         String type = sc.nextLine().trim();
 
         System.out.println("Initial Deposit(OPTIONAL) : ");
-        String amountStr = sc.nextLine().trim();
-        Double initial = Double.valueOf(amountStr);
+        Double initial = Double.valueOf(sc.nextLine().trim());
 
-        bankService.openAccount(name, email, type);
+        String accountNumber = bankService.openAccount(name, email, type);
+        if(initial > 0){
+            bankService.deposit(accountNumber, initial, "Deposit");
+        }
+        System.out.println("Account Opened Successfully.\nYour account number is " + accountNumber);
     }
 
-    private static void deposit(Scanner sc) {
-        
+    private static void deposit(Scanner sc, BankService bankService) {
+        System.out.println("Account Number : ");
+        String accountNumber = sc.nextLine().trim();
+
+        System.out.println("Amount : ");
+        Double amount = Double.valueOf(sc.nextLine().trim());
+
+        bankService.deposit(accountNumber, amount, "Deposit");
+        System.out.println(amount + " deposited to AC : " + accountNumber);
+
     }
 
     private static void withdraw(Scanner sc) {
