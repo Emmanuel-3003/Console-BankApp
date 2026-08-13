@@ -1,5 +1,6 @@
 package app;
 
+import domain.Account;
 import domain.Transaction;
 import service.BankService;
 import service.impl.BankServiceImpl;
@@ -38,7 +39,7 @@ public class Main {
                 case "4" -> transfer(sc, bankService);
                 case "5" -> statement(sc, bankService);
                 case "6" -> listAccount(sc, bankService);
-                case "7" -> searchAccount(sc);
+                case "7" -> searchAccount(sc, bankService);
                 case "0" -> running = false;
 
             }
@@ -118,6 +119,12 @@ public class Main {
         });
     }
 
-    private static void searchAccount(Scanner sc) {
+    private static void searchAccount(Scanner sc, BankService bankService) {
+        System.out.println("Customer name contains : ");
+        String q = sc.nextLine().trim();
+        List<Account> accounts = bankService.searchAccountsByCustomerName(q);
+        for(Account ac : accounts){
+            System.out.println(ac.getAccountNumber() + " | " + ac.getAccountType() + " | " + ac.getBalance());
+        }
     }
 }
