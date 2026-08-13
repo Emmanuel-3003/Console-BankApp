@@ -86,6 +86,13 @@ public class BankServiceImpl implements BankService {
         transactionRepository.add(toTransaction);
     }
 
+    @Override
+    public List<Transaction> getStatement(String account) {
+        return transactionRepository.findByAccount(account).stream()
+                .sorted(Comparator.comparing(Transaction::getTimeStamp))
+                .collect(Collectors.toList());
+    }
+
     private String getAccountNumber() {
         int size = accountRepository.findAll().size()+1;
         return String.format("AC%06d", size);

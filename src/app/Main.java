@@ -1,8 +1,10 @@
 package app;
 
+import domain.Transaction;
 import service.BankService;
 import service.impl.BankServiceImpl;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -34,7 +36,7 @@ public class Main {
                 case "2" -> deposit(sc, bankService);
                 case "3" -> withdraw(sc, bankService);
                 case "4" -> transfer(sc, bankService);
-                case "5" -> statement(sc);
+                case "5" -> statement(sc, bankService);
                 case "6" -> listAccount(sc, bankService);
                 case "7" -> searchAccount(sc);
                 case "0" -> running = false;
@@ -100,7 +102,14 @@ public class Main {
         System.out.println(amount + " transferred to AC : " + to + " from AC : " + from);
     }
 
-    private static void statement(Scanner sc) {
+    private static void statement(Scanner sc,  BankService bankService) {
+        System.out.println("Account Number : ");
+        String account = sc.nextLine().trim();
+
+        List<Transaction> statement = bankService.getStatement(account);
+        for(Transaction t : statement){
+            System.out.println(t.getTimeStamp() + " | " + t.getType() + " | " + t.getAmount() + " | " + t.getNote());
+        }
     }
 
     private static void listAccount(Scanner sc, BankService bankService) {
