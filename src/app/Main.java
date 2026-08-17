@@ -2,6 +2,7 @@ package app;
 
 import domain.Account;
 import domain.Transaction;
+import exception.AccountNotFoundException;
 import service.BankService;
 import service.impl.BankServiceImpl;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    static void main(String[] args) {
+    static void main(String[] args){
 
         Scanner sc =  new Scanner(System.in);
         BankService bankService = new BankServiceImpl();
@@ -34,7 +35,7 @@ public class Main {
 
             switch (choice){
                 case "1" -> openAccount(sc, bankService);
-                case "2" -> deposit(sc, bankService);
+                case "2" ->   deposit(sc, bankService);
                 case "3" -> withdraw(sc, bankService);
                 case "4" -> transfer(sc, bankService);
                 case "5" -> statement(sc, bankService);
@@ -46,7 +47,7 @@ public class Main {
         }
     }
 
-    private static void openAccount(Scanner sc, BankService bankService) {
+    private static void openAccount(Scanner sc, BankService bankService){
         System.out.println("Customer Name : ");
         String name = sc.nextLine().trim();
 
@@ -66,7 +67,7 @@ public class Main {
         System.out.println("Account Opened Successfully.\nYour account number is " + accountNumber);
     }
 
-    private static void deposit(Scanner sc, BankService bankService) {
+    private static void deposit(Scanner sc, BankService bankService){
         System.out.println("Account Number : ");
         String accountNumber = sc.nextLine().trim();
 
@@ -78,7 +79,7 @@ public class Main {
 
     }
 
-    private static void withdraw(Scanner sc, BankService bankService) {
+    private static void withdraw(Scanner sc, BankService bankService){
         System.out.println("Account Number : ");
         String accountNumber = sc.nextLine().trim();
 
@@ -89,7 +90,7 @@ public class Main {
         System.out.println(amount + " withdraw from AC : " + accountNumber);
     }
 
-    private static void transfer(Scanner sc, BankService bankService) {
+    private static void transfer(Scanner sc, BankService bankService){
         System.out.println("From Account Number : ");
         String from = sc.nextLine().trim();
 

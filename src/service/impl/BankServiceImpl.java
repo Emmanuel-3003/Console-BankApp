@@ -4,6 +4,9 @@ import domain.Account;
 import domain.Customer;
 import domain.Transaction;
 import domain.Type;
+import exception.AccountNotFoundException;
+import exception.InsufficientFundsException;
+import exception.ValidationException;
 import repository.AccountRepository;
 import repository.CustomerRepository;
 import repository.TransactionRepository;
@@ -39,9 +42,9 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void deposit(String accountNumber, Double amount, String note) {
+    public void deposit(String accountNumber, Double amount, String note){
         Account account = accountRepository.findByNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found : " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found : " + accountNumber));
 
         account.setBalance(account.getBalance() + amount);
 
@@ -53,10 +56,10 @@ public class BankServiceImpl implements BankService {
     @Override
     public void withdraw(String accountNumber, Double amount, String note) {
         Account account = accountRepository.findByNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found : " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found : " + accountNumber));
 
         if(account.getBalance() < amount) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
 
         account.setBalance(account.getBalance() - amount);
@@ -69,14 +72,14 @@ public class BankServiceImpl implements BankService {
     @Override
     public void transfer(String fromAcc, String toAcc, Double amount, String note) {
         if(fromAcc.equals(toAcc)) {
-            throw new RuntimeException("Cannot transfer to your own account..");
+            throw new ValidationException("Cannot transfer to your own account..");
         }
         Account from = accountRepository.findByNumber(fromAcc)
-                .orElseThrow(() -> new RuntimeException("Account not found : " + fromAcc));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found : " + fromAcc));
         Account to = accountRepository.findByNumber(toAcc)
-                .orElseThrow(() -> new RuntimeException("Account not found : " + toAcc));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found : " + toAcc));
         if(from.getBalance() < amount) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
         from.setBalance(from.getBalance() - amount);
         to.setBalance(to.getBalance() + amount);
