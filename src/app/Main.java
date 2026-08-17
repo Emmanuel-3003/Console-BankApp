@@ -58,8 +58,11 @@ public class Main {
         String type = sc.nextLine().trim();
 
         System.out.println("Initial Deposit(OPTIONAL) : ");
-        Double initial = Double.valueOf(sc.nextLine().trim());
-
+        String amountStr = sc.nextLine().trim();
+        if(amountStr.isBlank()){
+            amountStr = "0.00";
+        }
+        Double initial = Double.valueOf(amountStr);
         String accountNumber = bankService.openAccount(name, email, type);
         if(initial > 0){
             bankService.deposit(accountNumber, initial, "Deposit");

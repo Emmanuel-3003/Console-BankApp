@@ -11,6 +11,7 @@ import repository.AccountRepository;
 import repository.CustomerRepository;
 import repository.TransactionRepository;
 import service.BankService;
+import util.Validation;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,8 +23,29 @@ public class BankServiceImpl implements BankService {
     private final TransactionRepository transactionRepository =  new TransactionRepository();
     private final CustomerRepository customerRepository =  new CustomerRepository();
 
+    private final Validation<String> validateName = name -> {
+        if(name == null || name.isBlank()) throw new ValidationException("Name cannot be empty..");
+    };
+
+    private final Validation<String> validateEmail = email -> {
+        if(email == null || !email.contains("@")) throw new ValidationException("Email cannot be empty..");
+    };
+
+    private final Validation<String> validateType = type -> {
+        if(type == null || !(type.equalsIgnoreCase("SAVINGS") || type.equalsIgnoreCase("CURRENT")))
+            throw new ValidationException("Type must be SAVINGS or CURRENT..");
+    };
+
+    private final Validation<Double> validateAmountPositive = amount -> {
+        if(amount == null || amount < 0) throw new ValidationException("Please enter valid Amount..");
+    };
+
     @Override
     public String openAccount(String name, String email, String accountType) {
+
+        validateName.validate(name);
+        validateEmail.validate(email);
+        validateType.validate(accountType);
 
         String customerId = UUID.randomUUID().toString();
         Customer c = new Customer(customerId, name, email);
@@ -43,6 +65,9 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void deposit(String accountNumber, Double amount, String note){
+
+        validateAmountPositive.validate(amount);
+
         Account account = accountRepository.findByNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found : " + accountNumber));
 
@@ -55,6 +80,9 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void withdraw(String accountNumber, Double amount, String note) {
+
+        validateAmountPositive.validate(amount);
+
         Account account = accountRepository.findByNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found : " + accountNumber));
 
@@ -71,6 +99,9 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void transfer(String fromAcc, String toAcc, Double amount, String note) {
+
+        validateAmountPositive.validate(amount);
+
         if(fromAcc.equals(toAcc)) {
             throw new ValidationException("Cannot transfer to your own account..");
         }
