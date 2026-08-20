@@ -2,7 +2,6 @@ package service;
 
 import domain.Account;
 import domain.Transaction;
-import exception.AccountNotFoundException;
 
 import java.util.List;
 

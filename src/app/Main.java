@@ -2,7 +2,6 @@ package app;
 
 import domain.Account;
 import domain.Transaction;
-import exception.AccountNotFoundException;
 import service.BankService;
 import service.impl.BankServiceImpl;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    static void main(String[] args){
+    public static void main(String[] args){
 
         Scanner sc =  new Scanner(System.in);
         BankService bankService = new BankServiceImpl();
