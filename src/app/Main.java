@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-
+        //getting input from user..
         Scanner sc =  new Scanner(System.in);
         BankService bankService = new BankServiceImpl();
 
